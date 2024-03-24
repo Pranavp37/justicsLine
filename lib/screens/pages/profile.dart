@@ -5,10 +5,275 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Profile Page'),
+    return Scaffold(
+        body: Container(
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              Container(
+                padding:
+                    const EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+                height: MediaQuery.of(context).size.height / 4.3,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.vertical(
+                        bottom: Radius.elliptical(
+                            MediaQuery.of(context).size.width, 105.0))),
+              ),
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height / 6.5),
+                  child: Material(
+                    elevation: 10.0,
+                    borderRadius: const BorderRadius.all(Radius.circular(60)),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(60),
+                      ),
+                      child: Image.asset(
+                        'assets/images/profile.jpg',
+                        height: 120,
+                        width: 120,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 70.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'User Name',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 23.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Poppins'),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+          const SizedBox(height: 20.0),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Material(
+                elevation: 6.0,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 10.0),
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.person,
+                        color: Colors.black,
+                        size: 35.0,
+                      ),
+                      SizedBox(
+                        width: 20.0,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Name',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Poppins'),
+                          ),
+                          Text(
+                            'Vineeth S',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Poppins'),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                )),
+          ),
+          const SizedBox(height: 20.0),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Material(
+                elevation: 6.0,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 10.0),
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.email,
+                        color: Colors.black,
+                        size: 35.0,
+                      ),
+                      SizedBox(
+                        width: 20.0,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Email',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Poppins'),
+                          ),
+                          Text(
+                            'VineethS@gmail.com',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Poppins'),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                )),
+          ),
+          const SizedBox(height: 20.0),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Material(
+                elevation: 6.0,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 10.0),
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.file_copy,
+                        color: Colors.black,
+                        size: 35.0,
+                      ),
+                      SizedBox(
+                        width: 20.0,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Tearm and Condition',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Poppins'),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                )),
+          ),
+          const SizedBox(height: 20.0),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Material(
+                elevation: 6.0,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 10.0),
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.add,
+                        color: Colors.black,
+                        size: 35.0,
+                      ),
+                      SizedBox(
+                        width: 20.0,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Add your Profile',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Poppins'),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                )),
+          ),
+          const SizedBox(height: 20.0),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Material(
+                elevation: 6.0,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 10.0),
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.logout_outlined,
+                        color: Colors.black,
+                        size: 35.0,
+                      ),
+                      SizedBox(
+                        width: 20.0,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Log Out',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Poppins'),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                )),
+          ),
+        ],
       ),
-    );
+    ));
   }
 }
