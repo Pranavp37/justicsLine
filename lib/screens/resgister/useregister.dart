@@ -69,7 +69,7 @@ class _UserSignUpState extends State<UserSignUp> {
                               height: 20,
                             ),
                             Text(
-                              'Sign up',
+                              'Sign up.',
                               style: AppWidget.headLineTextstyle(),
                             ),
                             const SizedBox(
