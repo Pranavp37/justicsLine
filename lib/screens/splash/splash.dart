@@ -1,4 +1,4 @@
-import 'package:final_project/screens/pages/bottomnav.dart';
+import 'package:final_project/screens/resgister/userlogin.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => const BottomNav(),
+          builder: (BuildContext context) => const UserLogin(),
         ));
   }
 }

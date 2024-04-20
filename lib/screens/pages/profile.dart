@@ -6,6 +6,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        // ignore: avoid_unnecessary_containers
         body: Container(
       child: Column(
         children: [
@@ -181,7 +182,7 @@ class ProfileScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Tearm and Condition',
+                            'Terms and Conditions',
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 20.0,

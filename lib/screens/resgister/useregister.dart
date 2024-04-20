@@ -1,4 +1,4 @@
-import 'package:final_project/screens/pages/home.dart';
+import 'package:final_project/screens/resgister/userlogin.dart';
 import 'package:final_project/widgets/widget_data.dart';
 import 'package:flutter/material.dart';
 
@@ -136,7 +136,7 @@ class _UserSignUpState extends State<UserSignUp> {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const HomePage(),
+                          builder: (context) => const UserLogin(),
                         )),
                     child: Text(
                       "Already have an account ? Login",
