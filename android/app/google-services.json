@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "34714086604",
+    "project_id": "justice-line",
+    "storage_bucket": "justice-line.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34714086604:android:a4d3bb55c28539f3af6669",
+        "android_client_info": {
+          "package_name": "com.example.final_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADxQiPA3t-c6aOhoaN_PdKSgQdxhJFjJ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
