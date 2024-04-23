@@ -1,5 +1,6 @@
 import 'package:final_project/screens/resgister/userlogin.dart';
 import 'package:final_project/widgets/widget_data.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class UserSignUp extends StatefulWidget {
@@ -14,8 +15,44 @@ class _UserSignUpState extends State<UserSignUp> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
-
   final _formkey = GlobalKey<FormState>();
+
+  register(context) async {
+    // ignore: unnecessary_null_comparison
+    if (password != null) {
+      try {
+        // ignore: unused_local_variable
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: email, password: password);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+              "Registered Successfully",
+              style: TextStyle(fontSize: 20.0),
+            )));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const UserLogin(),
+            ));
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              backgroundColor: Colors.amber,
+              content: Text(
+                "password provided is too weak",
+                style: TextStyle(fontSize: 20.0),
+              )));
+        } else if (e.code == "email-already-in-use") {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text(
+            'Account alreadt exists',
+            style: TextStyle(fontSize: 20),
+          )));
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,6 +190,7 @@ class _UserSignUpState extends State<UserSignUp> {
                                       email = emailController.text;
                                       password = passController.text;
                                     }
+                                    register(context);
                                   },
                                   child: Material(
                                     elevation: 5.0,

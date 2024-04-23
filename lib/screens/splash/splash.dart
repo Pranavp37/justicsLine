@@ -1,3 +1,5 @@
+import 'package:final_project/screens/pages/bottomnav.dart';
+import 'package:final_project/screens/pages/details.dart';
 import 'package:final_project/screens/resgister/userlogin.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';

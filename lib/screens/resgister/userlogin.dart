@@ -1,5 +1,7 @@
+import 'package:final_project/screens/pages/bottomnav.dart';
 import 'package:final_project/screens/resgister/useregister.dart';
 import 'package:final_project/widgets/widget_data.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class UserLogin extends StatefulWidget {
@@ -14,6 +16,34 @@ class _UserLoginState extends State<UserLogin> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
+
+  login(context) async {
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const BottomNav()));
+    } on FirebaseException catch (e) {
+      if (e.code == "user-not-found") {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            "User not found ",
+            style: TextStyle(fontSize: 20),
+          ),
+          backgroundColor: Colors.amber,
+        ));
+      } else if (e.code == "wrong-password") {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            'Wrong password provided by user',
+            style: TextStyle(fontSize: 20),
+          ),
+          backgroundColor: Colors.amber,
+        ));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,6 +112,7 @@ class _UserLoginState extends State<UserLogin> {
                                 height: 30,
                               ),
                               TextFormField(
+                                controller: emailController,
                                 validator: (value) {
                                   bool validEmail =
                                       emailValidatorRegExp.hasMatch(value!);
@@ -103,6 +134,8 @@ class _UserLoginState extends State<UserLogin> {
                                 height: 40.0,
                               ),
                               TextFormField(
+                                controller: passController,
+                                obscureText: true,
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return "please enter your password";
@@ -137,7 +170,13 @@ class _UserLoginState extends State<UserLogin> {
                                     setState(() {});
                                     email = emailController.text;
                                     password = passController.text;
+                                    login(context);
                                   }
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //       builder: (context) => const BottomNav(),
+                                  //     ));
                                 },
                                 child: Material(
                                   elevation: 5.0,

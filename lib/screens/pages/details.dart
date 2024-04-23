@@ -19,9 +19,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(
-              Icons.arrow_back_ios_new_outlined,
-              color: Colors.black,
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: const Icon(
+                Icons.arrow_back_ios_new_outlined,
+                color: Colors.black,
+              ),
             ),
             const SizedBox(
               height: 15.0,

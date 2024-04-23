@@ -1,7 +1,25 @@
+import 'package:final_project/screens/resgister/userlogin.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  Future<void> logout(context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const UserLogin()));
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error logging out: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -246,26 +264,29 @@ class ProfileScreen extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.logout_outlined,
                         color: Colors.black,
                         size: 35.0,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 20.0,
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Log Out',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Poppins'),
+                          GestureDetector(
+                            onTap: () => logout(context),
+                            child: const Text(
+                              'Log Out',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Poppins'),
+                            ),
                           ),
                         ],
                       )

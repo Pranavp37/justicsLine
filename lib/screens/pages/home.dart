@@ -1,3 +1,4 @@
+import 'package:final_project/screens/pages/details.dart';
 import 'package:final_project/widgets/widget_data.dart';
 import 'package:flutter/material.dart';
 
@@ -70,40 +71,48 @@ class _HomePageState extends State<HomePage> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                Container(
-                  margin: const EdgeInsets.all(7.0),
-                  child: Material(
-                    elevation: 5.0,
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20))),
-                      child: Column(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.asset(
-                            "assets/images/salih.jpg",
-                            width: 150,
-                            height: 150,
-                            fit: BoxFit.cover,
-                          ),
-                          Text(
-                            "Muhammed Salih",
-                            style: AppWidget.semiBoldTextstyle(),
-                          ),
-                          Text(
-                            "Thathamapally,Alappuzha",
-                            style: AppWidget.lightTextstyle(),
-                          ),
-                          const SizedBox(
-                            height: 5.0,
-                          ),
-                          Text(
-                            "\$20/min",
-                            style: AppWidget.semiBoldTextstyle(),
-                          ),
-                        ],
+                GestureDetector(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DetailsScreen(),
+                      )),
+                  child: Container(
+                    margin: const EdgeInsets.all(7.0),
+                    child: Material(
+                      elevation: 5.0,
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        child: Column(
+                          // crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Image.asset(
+                              "assets/images/salih.jpg",
+                              width: 150,
+                              height: 150,
+                              fit: BoxFit.cover,
+                            ),
+                            Text(
+                              "Muhammed Salih",
+                              style: AppWidget.semiBoldTextstyle(),
+                            ),
+                            Text(
+                              "Thathamapally,Alappuzha",
+                              style: AppWidget.lightTextstyle(),
+                            ),
+                            const SizedBox(
+                              height: 5.0,
+                            ),
+                            Text(
+                              "\$20/min",
+                              style: AppWidget.semiBoldTextstyle(),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
