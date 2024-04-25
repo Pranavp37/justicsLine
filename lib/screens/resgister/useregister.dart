@@ -1,7 +1,10 @@
 import 'package:final_project/screens/resgister/userlogin.dart';
+import 'package:final_project/service/database.dart';
+import 'package:final_project/service/shared_pref.dart';
 import 'package:final_project/widgets/widget_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:random_string/random_string.dart';
 
 class UserSignUp extends StatefulWidget {
   const UserSignUp({super.key});
@@ -30,6 +33,20 @@ class _UserSignUpState extends State<UserSignUp> {
               "Registered Successfully",
               style: TextStyle(fontSize: 20.0),
             )));
+        String id = randomAlpha(10);
+        Map<String, dynamic> addUserInfo = {
+          "Name": nameController.text,
+          "Email": emailController.text,
+          "Wallet": "0",
+          "Id": id,
+        };
+
+        await DatabaseMethods().addUserdetails(addUserInfo, id);
+        await SharedPreferenceHelper().saveUserName(nameController.text);
+        await SharedPreferenceHelper().saveUserEmail(emailController.text);
+        await SharedPreferenceHelper().saveUserWallet('0');
+        await SharedPreferenceHelper().saveUserId(id);
+
         Navigator.push(
             context,
             MaterialPageRoute(
