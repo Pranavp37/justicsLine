@@ -1,3 +1,4 @@
+import 'package:final_project/screens/pages/add_profile.dart';
 import 'package:final_project/screens/resgister/userlogin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -225,26 +226,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.add,
                         color: Colors.black,
                         size: 35.0,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 20.0,
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Add your Profile',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Poppins'),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const AddProfileScreen()),
+                              );
+                            },
+                            child: const Text(
+                              'Add your Profile',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Poppins'),
+                            ),
                           ),
                         ],
                       )
