@@ -1,15 +1,27 @@
 import 'package:final_project/widgets/widget_data.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class DetailsScreen extends StatefulWidget {
-  const DetailsScreen({super.key});
+  String image, name, detail, price;
+  DetailsScreen(
+      {super.key,
+      required this.detail,
+      required this.image,
+      required this.name,
+      required this.price});
 
   @override
   State<DetailsScreen> createState() => _DetailsScreenState();
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
-  int a = 1;
+  int a = 1, total = 0;
+  @override
+  void initState() {
+    total = int.parse(widget.price);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +41,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
             const SizedBox(
               height: 15.0,
             ),
-            Image.asset(
-              "assets/images/salih.jpg",
+            Image.network(
+              widget.image,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 3,
               fit: BoxFit.fill,
@@ -43,7 +55,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 Column(
                   children: [
                     Text(
-                      'Muhammad Salih',
+                      widget.name,
                       style: AppWidget.headLineTextstyle(),
                     ),
                     Text(
@@ -56,6 +68,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 GestureDetector(
                   onTap: () {
                     if (a >= 2) {
+                      total = total - int.parse(widget.price);
                       --a;
                     }
 
@@ -84,6 +97,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 GestureDetector(
                   onTap: () {
                     if (a <= 29) {
+                      total = total + int.parse(widget.price);
                       ++a;
                     }
 
@@ -105,7 +119,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               height: 25.0,
             ),
             Text(
-              'Syed Muhammed Salih in Thathampally, Alappuzha is a top player in the category Lawyers in the Alappuzha. This well-known establishment acts as a one-stop destination servicing customers both local and from other parts of Alappuzha',
+              widget.detail,
               style: AppWidget.lightBoldTextstyle(),
             ),
             const Spacer(),
@@ -125,7 +139,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         width: 10.0,
                       ),
                       Text(
-                        '\$20',
+                        // ignore: prefer_interpolation_to_compose_strings
+                        '\$' + total.toString(),
                         style: AppWidget.secondBoldTextStyle(),
                       ),
                     ],

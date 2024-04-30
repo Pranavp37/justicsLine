@@ -1,6 +1,9 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart'; // Import the Cloud Firestore package
 
 class AddProfileScreen extends StatefulWidget {
   const AddProfileScreen({Key? key}) : super(key: key);
@@ -27,48 +30,85 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
     'Kasaragod'
   ];
   String? _selectedDistrict;
-  DateTime? _dateOfBirth;
-  PlatformFile? _educationCertificate;
-  File? _photo;
-
-  Future<void> _selectDateOfBirth(BuildContext context) async {
-    final initialDate = DateTime.now().subtract(const Duration(days: 365 * 18));
-    final newDate = await showDatePicker(
-      context: context,
-      initialDate: _dateOfBirth ?? initialDate,
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-
-    if (newDate != null) {
-      setState(() {
-        _dateOfBirth = newDate;
-      });
-    }
-  }
+  XFile? _educationCertificate;
+  XFile? _photo;
+  String? _name;
+  String? _selfIntro;
 
   Future<void> _uploadEducationCertificate() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf', 'doc', 'docx'],
+    final result = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
     );
 
     if (result != null) {
       setState(() {
-        _educationCertificate = result.files.single;
+        _educationCertificate = result;
       });
     }
   }
 
   Future<void> _pickPhoto() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
+    final result = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 800,
+      maxHeight: 800,
+      imageQuality: 80,
     );
+    _photo = File(result!.path) as XFile?;
 
-    if (result != null) {
-      setState(() {
-        _photo = File(result.files.single.path!);
-      });
+    setState(() {
+      _photo = result;
+    });
+  }
+
+  Future<void> _submitProfile() async {
+    // Check if all required fields are filled
+    if (_name == null ||
+        _selfIntro == null ||
+        _educationCertificate == null ||
+        _selectedDistrict == null ||
+        _photo == null) {
+      // Show an error message or handle the missing fields
+      return;
+    }
+
+    try {
+      // Upload education certificate to Firebase Storage
+      final educationCertificateRef = FirebaseStorage.instance
+          .ref()
+          .child('education_certificates/${_educationCertificate!.name}');
+      await educationCertificateRef.putData(
+        await _educationCertificate!.readAsBytes(),
+        SettableMetadata(contentType: 'application/pdf'),
+      );
+      final educationCertificateUrl =
+          await educationCertificateRef.getDownloadURL();
+
+      // Upload photo to Firebase Storage
+      final photoRef =
+          FirebaseStorage.instance.ref().child('photos/${_photo!.name}');
+      await photoRef.putData(
+        await _photo!.readAsBytes(),
+        SettableMetadata(contentType: 'image/jpeg'),
+      );
+      final photoUrl = await photoRef.getDownloadURL();
+
+      // Create a map with the data to be stored
+      Map<String, dynamic> profileData = {
+        'name': _name,
+        'selfIntro': _selfIntro,
+        'educationCertificateUrl': educationCertificateUrl,
+        'district': _selectedDistrict,
+        'photoUrl': photoUrl,
+      };
+
+      // Add the data to the 'newlawyer' collection in Firestore
+      await FirebaseFirestore.instance.collection('newlawyer').add(profileData);
+      // Show a success message or perform any additional actions
+    } catch (e) {
+      // Handle the error
+      // ignore: avoid_print
+      print('Error adding profile: $e');
     }
   }
 
@@ -80,144 +120,152 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Photo',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            GestureDetector(
-              onTap: _pickPhoto,
-              child: Container(
-                width: 100.0,
-                height: 100.0,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(8.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Photo',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                child: _photo != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.file(
-                          _photo!,
-                          fit: BoxFit.cover,
+              ),
+              const SizedBox(height: 8.0),
+              GestureDetector(
+                onTap: _pickPhoto,
+                child: Container(
+                  width: 100.0,
+                  height: 100.0,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: _photo != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.file(
+                            _photo! as File,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : const Icon(
+                          Icons.camera_alt,
+                          size: 48.0,
+                          color: Colors.grey,
                         ),
-                      )
-                    : const Icon(
-                        Icons.camera_alt,
-                        size: 48.0,
-                        color: Colors.grey,
-                      ),
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            const Text(
-              'Date of Birth',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            GestureDetector(
-              onTap: () => _selectDateOfBirth(context),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 8.0,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      _dateOfBirth != null
-                          ? '${_dateOfBirth!.day}/${_dateOfBirth!.month}/${_dateOfBirth!.year}'
-                          : 'Select Date of Birth',
-                    ),
-                    const Icon(Icons.calendar_today),
-                  ],
                 ),
               ),
-            ),
-            const SizedBox(height: 16.0),
-            const Text(
-              'Education Certificate',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            GestureDetector(
-              onTap: _uploadEducationCertificate,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 8.0,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      _educationCertificate != null
-                          ? _educationCertificate!.name
-                          : 'Upload Education Certificate',
-                    ),
-                    const Icon(Icons.upload_file),
-                  ],
+              const SizedBox(height: 16.0),
+              const Text(
+                'Name',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-            const SizedBox(height: 16.0),
-            const Text(
-              'Location',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            DropdownButtonFormField<String>(
-              value: _selectedDistrict,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedDistrict = newValue;
-                });
-              },
-              items: _districts.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              decoration: const InputDecoration(
-                labelText: 'Select District',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  // Add your submit logic here
+              const SizedBox(height: 8.0),
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _name = value;
+                  });
                 },
-                child: const Text('Submit'),
+                decoration: const InputDecoration(
+                  hintText: 'Enter your name',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 16.0),
+              const Text(
+                'Self Introduction',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _selfIntro = value;
+                  });
+                },
+                maxLines: null,
+                decoration: const InputDecoration(
+                  hintText: 'Introduce yourself',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              const Text(
+                'Education Certificate',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              GestureDetector(
+                onTap: _uploadEducationCertificate,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 8.0,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        _educationCertificate != null
+                            ? _educationCertificate!.name
+                            : 'Upload Education Certificate',
+                      ),
+                      const Icon(Icons.upload_file),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              const Text(
+                'Location',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              DropdownButtonFormField<String>(
+                value: _selectedDistrict,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedDistrict = newValue;
+                  });
+                },
+                items: _districts.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                decoration: const InputDecoration(
+                  labelText: 'Select District',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _submitProfile,
+                  child: const Text('Submit'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
